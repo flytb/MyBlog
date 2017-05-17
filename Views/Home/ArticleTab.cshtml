@@ -1,0 +1,56 @@
+﻿<div class="tab" id="lp_right_select">
+  
+    <div class="tab-top">
+        <ul class="hd" id="tb">
+            <li class="cur"><a >点击排行</a></li>
+            <li><a >最新文章</a></li>
+            <li><a >站长推荐</a></li>
+        </ul>
+    </div>
+    <div class="tab-main" id="tb-main">
+        <div class="bd bd-news" style="display:block;">
+            <ul>
+                @foreach (var item in ServiceHelper.GetFireArtilce(6))
+                {
+                    <li><a href="@Url.Action("Index","Article",new { id=item.id})" target="_blank">@item.title</a></li>
+                }
+            </ul>
+        </div>
+        <div class="bd bd-news">
+            <ul>
+                @foreach (var item in ServiceHelper.GetNewArtilce(6))
+                {
+                    <li><a href="@Url.Action("Index","Article",new { id=item.id})"  target="_blank">@item.title</a></li>
+                }
+            </ul>
+        </div>
+        <div class="bd bd-news">
+            <ul>
+                @foreach (var item in ServiceHelper.GetRecommendArtilce(6))
+                {
+                    <li><a href="@Url.Action("Index","Article",new { id=item.id})"  target="_blank">@item.title</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+		     window.onload=function()
+			 {
+			     var oLi=document.getElementById("tb").getElementsByTagName("li");
+				 var oUl=document.getElementById("tb-main").getElementsByTagName("div");
+				 for(var i=0;i<oLi.length;i++)
+				 {
+				     oLi[i].index=i;
+					 oLi[i].onmouseover=function()
+					 {
+					    for(var n=0;n<oLi.length;n++)
+						    oLi[n].className="";
+							this.className="cur";
+						for(var n=0;n<oUl.length;n++)
+                            oUl[n].style.display="none";
+                            oUl[this.index].style.display="block";
+					 }
+				 }
+			 }
+</script>

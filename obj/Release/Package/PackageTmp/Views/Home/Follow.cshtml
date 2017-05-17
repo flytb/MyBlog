@@ -1,0 +1,29 @@
+﻿<div class="tit01">
+    <h3>关注我</h3>
+    <div class="gzwm" style="color:#06e856">
+        <ul>
+            <li ><a class="xlwb" id="xlwb" onclick="Tips(this, '微博名：橡皮的象不是巷','red')">新浪微博</a></li>
+            <li ><a class="txwb" id="txwb" onclick="Tips(this, '微博名：小巷小路', '#39c2ff')">腾讯微博</a></li>
+            <li ><a class="rss" id="rss" onclick="Tips(this, 'RRS：这是什么', '#f2be16')">RSS</a></li>
+            <li ><a class="wx"  id="wx" onclick="Tips(this, '邮箱：694039791@qq.com', '#06e856')">邮箱</a></li>
+        </ul>
+    </div>
+</div>
+<div class="weather">
+    @{ MyBlog.Models.Weather weather = ViewBag.Weather as MyBlog.Models.Weather;}
+    <div><i class="@(ServiceHelper.GetWeatherImg(weather.data.forecast[0].type))"></i></div>
+    <div>
+     <p style="font-size:24px">@weather.data.wendu℃</p>
+    <p>
+        @(weather.data.city+" | "+ weather.data.forecast[0].type+" | "+ weather.data.forecast[0].fengxiang+" "+ weather.data.forecast[0].fengli)
+    </p>
+    </div>
+</div>
+<script type="text/javascript">
+    var Tips = function (obj,content,color) {
+        layer.tips(content, '#' + $(obj).attr('id'), {
+            tips: [1, color],
+            time: 3000
+        });
+    }
+</script>

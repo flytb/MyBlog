@@ -1,0 +1,57 @@
+﻿<header>
+    <div class="logo f_l">
+        <a href="#">
+            <img src="~/Images/logo.png">
+        </a>
+    </div>
+    <div id="topnav" class="f_r">
+        <ul class="layui-nav layui-nav-tree ">
+            <li class="layui-nav-item"><a class="topnav_no" href="@Url.Action("Index","Home")" id="HomePage">首页</a></li>
+            <li class="layui-nav-item">
+                <a class="topnav_no" href="@Url.Action("Index","About")">关于我</a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="topnav_no" href="@Url.Action("Index","Search")">文章</a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="topnav_no" href="@Url.Action("Index","TimeAxis")">历程</a>
+            </li>
+            <li class="layui-nav-item">
+                <a class="topnav_no" href="@Url.Action("Index","Image")" id="ImagePage">相册</a>
+            </li>
+            <li class="layui-nav-item"> <a class="topnav_no" href="@Url.Action("Index","Message")" id="MessagePage">留言</a></li>
+</ul>
+    </div>
+    
+</header>
+<div  class="menu-box">
+    <ul>
+        <li><a class="topnav_no" href="@Url.Action("Index","Home")" id="HomePage">首页</a></li>
+        <li>
+            <a class="topnav_no" href="@Url.Action("Index","About")">关于我</a>
+        </li>
+        <li>
+            <a class="topnav_no" href="@Url.Action("Index","Search")">文章</a>
+        </li>
+        <li>
+            <a class="topnav_no" href="@Url.Action("Index","TimeAxis")">历程</a>
+        </li>
+        <li>
+            <a class="topnav_no" href="@Url.Action("Index","Image")" id="ImagePage">相册</a>
+        </li>
+        <li> <a class="topnav_no" href="@Url.Action("Index","Message")" id="MessagePage">留言</a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+    $(window).scroll(function () {
+        scrollH = document.body.scrollHeight;
+        scrollT = document.body.scrollTop;
+        if (scrollT > 50) {
+            $(".menu-box").css("opacity", "1");
+            $("#topnav").css("opacity", "0");
+        } else {
+            $(".menu-box").css("opacity", "0");
+            $("#topnav").css("opacity", "1");
+        }
+    });
+</script>

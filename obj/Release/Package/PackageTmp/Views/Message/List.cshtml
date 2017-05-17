@@ -1,0 +1,45 @@
+﻿@model IPagedList<message>
+@{int i = 1;}
+@foreach (var item in Model)
+{
+    <div class="art-msg @("msg-color-"+i)">
+        <p>游客:</p>
+        <p class="art-msg-content">@item.content</p>
+        <div style="max-height:400px;width:85%;overflow-y:auto;margin:0 auto;">
+            @if (item.message_reply.Count() > 0)
+                {
+                    foreach (var reply in item.message_reply)
+                    {
+                    <div class="art-msg-reply-list"><p>游客: &nbsp;@reply.message</p><p style="text-align:right">@(ServiceHelper.GetTimeDistance((DateTime)reply.reply_time)) </p></div>
+                }
+            }
+        </div>
+        <p class="art-msg-time">
+          @(ServiceHelper.GetTimeDistance((DateTime)item.msg_time))
+        </p>
+    </div>
+                    { i++; if (i > 5) { i = 1; } }
+                }
+<div class="pagelist">
+    @Html.PagedListPager(Model, page => Url.Action("List", new {  pageindex = page, pagesize = Model.PageSize }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+    new PagedListRenderOptions
+    {
+        LinkToLastPageFormat = "尾页",
+        LinkToFirstPageFormat = "首页",
+        LinkToNextPageFormat = "下一页",
+        LinkToPreviousPageFormat = "上一页",
+        MaximumPageNumbersToDisplay = 5,
+    }, new AjaxOptions
+    {
+        HttpMethod = "Post",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "message",
+        OnSuccess = "UpdatePage"
+    }))
+</div>
+<script type="text/javascript">
+    var UpdatePage = function (data) {
+        $("#pageindex").val('@Model.PageNumber');
+    }
+</script>
+

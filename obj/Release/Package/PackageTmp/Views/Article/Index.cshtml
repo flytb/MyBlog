@@ -1,0 +1,84 @@
+﻿@model user_article
+<article>
+    <div class="l_box f_l">
+          <p class="art_title">@Model.title</p>
+        <div class="art_time">
+            <p>发布时间：@Model.add_time.Value.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            <p>作者：@Model.sys_user.user_name</p>
+            <p>类型：@Model.article_type.type_name</p>
+            <p>浏览：@Model.browse_num</p>
+        </div>
+        <div class="art_content">@Html.Raw(Model.content)</div>
+        <div class="art_footer">
+            <p>分类：&nbsp;<a href="@Url.Action("Index","Search",new { art=Model.type_id})">@Model.article_type.type_name</a></p>
+@{ var ids = Model.key_word.Split(',').ToList(); List<int> words = new List<int>();
+    foreach (var item in ids)
+    {
+        if (!string.IsNullOrEmpty(item)) { words.Add(int.Parse(item)); };
+    } }
+            <p>标签：
+            @foreach (var item in ServiceHelper.GetKeyWordList(words))
+            {
+                <span>
+                    <a href="@Url.Action("Index","Search",new { key=item.id})">@item.key_word1</a>
+                </span>
+            }
+            </p>
+        </div>
+        <div class="art_next">
+            @{ var upper = ViewBag.Upper as user_article;
+                var next = ViewBag.Next as user_article;
+                }
+            <div class="upper"><span>上一篇:
+                <a href="@(upper != null ? Url.Action("Index","Article",new { id=upper.id}):"javascript:;")" title="@(upper!=null?upper.title:"没有了")">@(upper != null ? upper.title.Count() > 18 ? upper.title.Substring(0, 16) + "..." : upper.title : "没有了")</a></span></div>
+            <div class="next"><span>下一篇:<a title="@(next!=null?next.title:"没有了")" href="@(next != null ? Url.Action("Index","Article",new { id=next.id}):"javascript:;")">@(next != null ? next.title.Count()>18? next.title.Substring(0,16)+"...": next.title : "没有了")</a></span></div>
+        </div>
+        @using (Ajax.BeginForm("ArtMessage", "Article", new AjaxOptions { UpdateTargetId = "artmessage" }))
+        {
+            <input type="hidden" id="artid" name="artid" value="@Model.id" />
+            <input type="hidden" id="pageindex" name="pageindex" value="1" />
+            <input type="hidden" id="pagesize" name="pagesize" value="5" />
+            <button type="submit" id="msgsub" style="display:none"></button>
+        }
+        <input type="hidden" id="totalNumber"/>
+        <div id="artmessage">
+        </div>
+        <div class="art-reply">
+            @using (Ajax.BeginForm("ArtReplyMsg", new AjaxOptions { OnSuccess = "ArtRelpySuccess" }))
+            {
+                <input name="artreplyid" type="hidden" value="@Model.id" />
+                    <textarea placeholder="写下你的评论..." name="artreplymsg" required></textarea>
+                    <p style="text-align:right">
+                        <button type="submit">评论</button>
+                    </p>
+            }
+        </div>
+    </div>
+    <div class="r_box f_r">
+        <!--关注我-->
+        @Html.Action("Follow","Home")
+        <!--文章tab-->
+        @Html.Action("ArticleTab", "Home")
+        <!--标签云-->
+        @Html.Action("Cloud", "Home")
+        <!--图文推荐-->
+        @Html.Action("TuWen", "Home")
+        <!--友情链接-->
+        @Html.Action("Links", "Home")
+    </div>
+</article>
+<script type="text/javascript">
+    var goPage = function (i) {
+        $("#pageindex").val(i);
+        $("#msgsub").click();
+    };
+
+    var ArtRelpySuccess = function (data) {
+        if (data.RequestResult) {
+            $("textarea[name='artreplymsg']").val('');
+            layer.msg('评论成功', {time:800});
+            goPage(1);
+        }
+    }
+    goPage(1);
+</script>

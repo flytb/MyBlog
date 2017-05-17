@@ -1,0 +1,156 @@
+/*共用CSS*/
+*{margin:0px;padding:0px;}
+body { font: 12px/1.5 'Microsoft Yahei', 'Simsun'; color: #666666; background: #fff }
+img { border: 0; display: block }
+ul { list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+a { outline: none; }
+a:link, a:visited { text-decoration: none; color: #666 }
+a:hover { text-decoration: none; }
+.f_l{float:left;}
+.f_r{float:right;}
+.l_box{width:670px;}
+.r_box{width:300px;}
+.display{
+    display:none;
+}
+/*滚动条*/
+::-webkit-scrollbar {width: 4px;}
+::-webkit-scrollbar-thumb {border-radius: 2px;background: rgba(0,0,0,0.2);}
+::-webkit-scrollbar-thumb:window-inactive {background: rgba(0,0,0,0.5);}
+::-webkit-scrollbar-thumb:vertical:hover{background-color: rgba(0,0,0,0.3);}  
+::-webkit-scrollbar-thumb:vertical:active{background-color: rgba(0,0,0,0.5);} 
+/*头部样式*/
+header{
+	width:1000px;
+	margin:20px auto;
+	overflow:hidden;
+	clear:both;
+}
+#topnav {
+	width:60%;
+	background:#f77825;
+	height:44px;
+    padding:1px;
+	line-height:46px; 
+	text-align:center;
+	border-radius:46px; 
+    border:1px solid #f77825;
+    box-sizing:content-box;
+    opacity:1;
+    transition:opacity 1s ease-in-out;
+}
+#topnav li:first-child{margin-left:60px}
+#topnav li{float:left;margin-right:4px}
+#topnav a { font-size: 18px; font-family: "Microsoft Yahei", Arial, Helvetica, sans-serif; padding: 0px 20px;color:#fff }
+#topnav a:hover { background: #fff; color: #f77825;border-radius:12px;  }
+#topnav a.topnav_current { background: #fff; color: #f77825;border-radius:12px; }/* 高亮选中颜色 */
+.topnav_no{color: #c72f2f}
+
+.menu-box {
+    display:block;
+	left: 50%;    margin-left:550px;	top: 20%;    width:60px;    position:fixed;
+    opacity:0;
+    transition:opacity 1s linear;
+    box-shadow:1px 5px 1px #EAEAEA;
+}
+.menu-box ul li:hover  {
+    background-color:#f77825;
+}
+.menu-box ul li:hover a{
+    color:#fff;
+}
+.menu-box ul{
+    text-align:center;
+	line-height:36px; 
+	text-align:center;
+    border:1px solid rgba(0,0,0,0.2);
+    box-sizing:content-box;
+}
+article{
+	width:1000px;
+	margin:20px auto;
+}
+@media (max-width: 1120px) {
+          .menu-box{
+              display:none;
+          }
+}
+@media (max-width: 1000px) {
+		  article {
+		    width:100%;
+		  }
+          header{
+              width:100%;
+          }
+          .menu-box{
+              display:none;
+          }
+		}
+/*中间*/
+.center{overflow: hidden;margin-top:-25px}
+
+/*底部*/
+.fd-foot { height:90px;margin-top:60px }
+.fd-foot .link{ text-align:center; padding:10px 0;}
+.fd-foot .link .links{font:14px/30px "Microsoft Yahei"; color:#888; margin:5px 0;}
+.fd-foot .link .links a{ margin:0 5px;color:#888;}
+.fd-foot .link .copyright{ font:12px/1.5 Verdana, Geneva, sans-serif; color:#888;}
+.fd-foot .link .copyright a{color:#888;}
+/*右侧选项卡*/
+.tab{
+	width:100%;
+	margin:30px 0 20px 0;
+	overflow:hidden;
+}
+.tab-top{
+	height:32px;
+	border-bottom:solid 1px #EAEAEA;
+	font-size:14px;
+}
+#tb li a{
+	float:left;
+	height:32px;
+	cursor:pointer;
+	line-height:32px;
+	list-style-type:none;
+	padding:0 15px;
+}
+#tb li.cur a { color: #fff; background: #f77825; }
+.bd { display: none }
+.bd-news ul { padding: 10px 0 0 10px; background: url(../images/ph2.png) no-repeat 10px 29px; }
+.bd-news ul li { border-bottom: solid 1px #EAEAEA; line-height: 30px; height: 30px; overflow: hidden; font-size: 14px; padding: 10px 0 0 30px; }
+.bd-news ul li a { display: block; -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    box-sizing: content-box; }
+.bd-news ul li a:hover { color: #000; }
+.bd-news ul li:hover { border-bottom: #000 1px solid; }/* 鼠标放上去的效果 */
+/*标签云*/
+.cloud{
+	width:100%;
+	clear:both;
+	overflow:hidden;
+}
+.cloud h3{
+	line-height:40px;
+	color:#38485A;
+	font-size:18px;
+	border-bottom:1px solid #E6E6E6;
+	height:40px;
+}
+.cloud ul{
+	margin:20px 0;
+}
+.cloud ul li { line-height: 24px; height: 24px; display: block; background: #999; float: left; padding: 3px 11px; margin: 10px 10px 0 0; border-radius: 8px; -moz-transition: all 0.5s; -webkit-transition: all 0.5s; -o-transition: all 0.5s; transition: all 0.5s; }
+.cloud ul li a { color: #FFF }
+.cloud ul li:nth-child(8n-7) { background: #8A9B0F }
+.cloud ul li:nth-child(8n-6) { background: #EB6841 }
+.cloud ul li:nth-child(8n-5) { background: #3FB8AF }
+.cloud ul li:nth-child(8n-4) { background: #FE4365 }
+.cloud ul li:nth-child(8n-3) { background: #FC9D9A }
+.cloud ul li:nth-child(8n-2) { background: #EDC951 }
+.cloud ul li:nth-child(8n-1) { background: #C8C8A9 }
+.cloud ul li:nth-child(8n) { background: #83AF9B }
+.cloud ul li:first-child { background: #036564 }
+.cloud ul li:last-child { background: #3299BB }
+.cloud ul li:hover { border-radius: 0; text-shadow: #000 1px 1px 1px }

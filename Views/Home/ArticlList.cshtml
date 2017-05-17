@@ -1,0 +1,28 @@
+﻿@model IPagedList<user_article>
+@foreach (var item in Model)
+{
+    <div class="blogs">
+        <figure>
+            <img src="@item.image">
+        </figure>
+        <ul>
+            <h3><a href="@Url.Action("Index","Article",new { id=item.id})" target="_blank">@item.title</a></h3>
+            <p>@("\""+item.@abstract+ "\"")</p>
+            <p class="autor">
+                <span class="lm f_l">
+                    <a href="@Url.Action("Index","Search",new { art=item.type_id})">@item.article_type.type_name</a>
+                </span>
+                <span class="dtime f_l">@item.add_time.Value.ToString("yyyy-MM-dd")</span>
+                <span class="viewnum f_r">
+                    浏览（<a>@item.browse_num</a>）
+                </span>
+                <span class="pingl f_r">
+                    评论（<a>@item.article_comment.Where(q=>q.is_del!=true).Count()</a>）
+                </span>
+            </p>
+        </ul>
+    </div>
+}
+<script type="text/javascript">
+    
+</script>

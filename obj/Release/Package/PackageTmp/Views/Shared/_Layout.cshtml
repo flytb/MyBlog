@@ -1,0 +1,14 @@
+﻿@{ 
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+}
+<!--头部-->
+@Html.Action("Header","Basics")
+<div class="center">
+    <!--中间-->
+    @RenderBody()
+</div>
+    <!--尾部-->
+    @Html.Action("Footer", "Basics")
+
+<!--js-->
+@RenderSection("scripts",required:false)

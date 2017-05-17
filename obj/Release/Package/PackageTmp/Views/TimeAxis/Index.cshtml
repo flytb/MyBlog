@@ -1,0 +1,62 @@
+﻿@model List<time_axis>  
+<link rel="stylesheet" href="~/Content/style-time.css" />
+<article>
+    <div style="margin:50px auto 0px;width:30px">
+        <img src="~/Images/nav-icon.png" alt="Location">
+    </div>
+    <section id="cd-timeline" class="cd-container">
+  
+        @foreach (var item in Model)
+        {
+            <div class="cd-timeline-block">@if (item.art_type == 1)
+            {
+                <div class="cd-timeline-img cd-location">
+                    <img src="~/Images/nav-icon.png" alt="Location">
+                </div>
+            }
+            else
+            {
+                <div class="cd-timeline-img cd-picture">
+                    <img src="../images/cd-icon-picture.svg" alt="Picture">
+                </div>
+
+            }
+                    <!-- cd-timeline-img -->
+
+                    <div class="cd-timeline-content">
+                        <h2>@item.title</h2>
+                        <p>@item.content</p>
+                        @if (item.art_type == 1)
+                        {
+                            <a href="@Url.Action("index","Article",new { id=item.art_id})" class="cd-read-more">点击查看</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("PhotosList","Image",new { album=item.art_id})" class="cd-read-more">点击查看</a>
+                        }
+                        <span class="cd-date">@item.add_time.Value.ToString("yyyy-MM-dd")</span>
+                    </div> <!-- cd-timeline-content -->
+                </div> <!-- cd-timeline-block -->
+        }
+</section> <!-- cd-timeline -->
+</article>
+
+<script>
+$(function(){
+	var $timeline_block = $('.cd-timeline-block');
+	//hide timeline blocks which are outside the viewport
+	$timeline_block.each(function(){
+		if($(this).offset().top > $(window).scrollTop()+$(window).height()*0.75) {
+			$(this).find('.cd-timeline-img, .cd-timeline-content').addClass('is-hidden');
+		}
+	});
+	//on scolling, show/animate timeline blocks when enter the viewport
+	$(window).on('scroll', function(){
+		$timeline_block.each(function(){
+			if( $(this).offset().top <= $(window).scrollTop()+$(window).height()*0.75 && $(this).find('.cd-timeline-img').hasClass('is-hidden') ) {
+				$(this).find('.cd-timeline-img, .cd-timeline-content').removeClass('is-hidden').addClass('bounce-in');
+			}
+		});
+	});
+});
+</script>

@@ -1,0 +1,84 @@
+﻿@model ArtSearchModel
+<article>
+    <div class="l_box f_l">
+        <div class="search-condition">
+            <div class="search-box">
+                @using (Ajax.BeginForm("List", new AjaxOptions { UpdateTargetId = "articllist" }))
+            {
+                @Html.TextBoxFor(q => q.Title, new { @class = "search-input", @name = "Title", @placeholder = "输入搜索内容..." })
+                <button type="submit" id="searchsub">搜索</button>
+                @Html.HiddenFor(q => q.PageIndex, new { @name = "PageIndex" })
+                @Html.HiddenFor(q => q.PageSize, new { @name = "PageSize" })
+                @Html.HiddenFor(q => q.ArtType, new { @name = "ArtType" })
+                @Html.HiddenFor(q => q.KeyID, new { @name = "KeyID" })
+                @Html.HiddenFor(q => q.Order, new { @name = "Order" })
+                }
+            </div>
+            <dl>
+                <dt>类型：</dt>
+                <dd>
+                    @foreach (var item in ServiceHelper.GetArtTypeList())
+                    {
+                        <a alt="art_@item.id" onclick="TakeArtType(this,'@item.id')">@item.type_name</a>
+                    }
+                </dd>
+            </dl>
+            <dl>
+                <dt>标签：</dt>
+                <dd>
+                    @foreach (var item in ServiceHelper.GetKeyWordList())
+                    {
+                        <a alt="key_@item.id" onclick="TakeWordType(this,'@item.id')">@item.key_word1</a>
+                    }
+                </dd>
+            </dl>
+
+        </div>
+        <div class="xuxian"></div>
+        <div id="articllist">
+            @Html.Action("List", new { PageIndex = Model.PageIndex, PageSize = Model.PageSize, ArtType = Model.ArtType, KeyID = Model.KeyID, Order = Model.Order, Title = Model.Title })
+        </div>
+    </div>
+    <div class="r_box f_r">
+        <!--关注我-->
+        @Html.Action("Follow", "Home")
+        <!--文章tab-->
+        @Html.Action("ArticleTab", "Home")
+        <!--标签云-->
+        @Html.Action("Cloud", "Home")
+        <!--图文推荐-->
+        @Html.Action("TuWen", "Home")
+        <!--友情链接-->
+        @Html.Action("Links", "Home")
+    </div>
+</article>
+<script type="text/javascript">
+    var TakeArtType = function (obj, id) {
+        if ($(obj).attr('class') == "inclick") {
+            $(obj).removeClass("inclick");
+            $("#ArtType").val(0);
+        }
+        else {
+            $(obj).addClass("inclick").siblings().removeClass("inclick");
+            $("#ArtType").val(id);
+        }
+        $("#searchsub").click();
+    }
+    var TakeWordType = function (obj, id) {
+        if ($(obj).attr('class') == "inclick") {
+            $(obj).removeClass("inclick");
+            $("#KeyID").val(0);
+
+        } else {
+            $(obj).addClass("inclick").siblings().removeClass("inclick");
+            $("#KeyID").val(id);
+        }
+        $("#searchsub").click();
+    }
+    $(function(){
+        var art=$("#ArtType").val();
+        var key=$("#KeyID").val();
+        $("a[alt='art_" + art + "']").addClass("inclick");
+        $("a[alt='key_" + key + "']").addClass("inclick");
+    })
+</script>

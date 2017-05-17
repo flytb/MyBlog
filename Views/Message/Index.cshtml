@@ -1,0 +1,59 @@
+﻿<article>
+    <div class="l_box f_l">
+       @* <div style="margin:0 auto;width:500px"><img src="../Images/message-top.jpg" style="width:500px"/></div>*@
+        <div class="art-comment" style="margin:20px auto 0px">
+            <span class="comfont">给博主留言啦</span>
+            @using (Ajax.BeginForm("List", new AjaxOptions { UpdateTargetId = "message" }))
+            {
+                <input type="hidden" name="pageindex" id="pageindex" value="1" />
+                <input type="hidden" name="pagesize" id="pagesize" value="10" />
+                <button type="submit" id="msgsub" class="display"></button>
+            }
+            <div id="message">
+                @Html.Action("List", "Message", new { pageindex = 1, pagesize = 10, })
+            </div>
+        </div>
+        <div class="art-reply">
+            @using (Ajax.BeginForm("MessageIng", new AjaxOptions { OnSuccess = "MessageSuccess" }))
+            {
+                <textarea placeholder="写下你的留言..." name="msg" required></textarea>
+                    <p style="text-align:right">
+                        <button type="submit">留言</button>
+                    </p>
+            }
+        </div>
+    </div>
+    <div class="r_box f_r">
+        <!--关注我-->
+        @Html.Action("Follow", "Home")
+        <!--文章tab-->
+        @Html.Action("ArticleTab", "Home")
+        <!--标签云-->
+        @Html.Action("Cloud", "Home")
+        <!--图文推荐-->
+        @Html.Action("TuWen", "Home")
+        <!--友情链接-->
+        @Html.Action("Links", "Home")
+    </div>
+</article>
+<script>
+    $(function () {
+        $("#MessagePage").addClass("topnav_current").siblings().removeClass("topnav_current");
+    })
+    var goPage=function(i)
+    {
+        $("#pageindex").val(i);
+        $("#msgsub").click();
+    }
+    var MessageSuccess=function(data)
+    {
+        if (data.RequestResult) {
+            $("textarea[name='msg']").val("");
+            layer.msg("留言成功");
+            goPage(1);
+        }
+        else {
+            layer.msg(data.Message);
+        }
+    }
+</script>

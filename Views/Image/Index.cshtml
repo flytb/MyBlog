@@ -1,0 +1,16 @@
+﻿<link href="~/Content/style-img.css" rel="stylesheet" />
+<script src="~/Scripts/minigrid.min.js"></script>
+<article>
+    <div id="ImageDetail">
+        <div class="album-title"><p>博客相册</p></div>
+        @Html.Action("List")
+    </div>
+</article>
+<script type="text/javascript">
+    $(function () {
+        $("#ImagePage").addClass("topnav_current").siblings().removeClass("topnav_current");
+    })
+    var GoPhotosList = function (id) {
+        window.location = "@Url.Action("PhotosList")" + "?album=" + id;
+    }
+</script>

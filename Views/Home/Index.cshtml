@@ -1,0 +1,66 @@
+﻿@model SearchModel
+<article>
+    <div class="l_box f_l">
+        @Html.Action("Banner")
+        <div class="topnews">
+            <h2>
+                <span>
+                    <a>个人博客(@(ServiceHelper.GetArtType("个人博客").art_num))</a>
+                    <a>技术(@(ServiceHelper.GetArtType("技术").art_num))</a>
+                    <a>心情(@(ServiceHelper.GetArtType("心情").art_num))</a>
+                </span>
+                文章推荐
+            </h2>
+            @using (Ajax.BeginForm("ArticlList", new AjaxOptions { UpdateTargetId = "articllist" }))
+            {
+                @Html.HiddenFor(q => q.PageIndex)
+                @Html.HiddenFor(q=>q.PageSize)
+            }
+            <div id="articllist">
+                @Html.Action("ArticlList",new { model=Model})
+            </div>
+            <div class="top-more"><p onclick="TakeMore('4',this)">加载更多</p></div>
+
+        </div>
+    </div>
+    <div class="r_box f_r">
+        <!--关注我-->
+        @Html.Action("Follow")
+        <!--文章tab-->
+        @Html.Action("ArticleTab")
+        <!--标签云-->
+        @Html.Action("Cloud")
+        <!--图文推荐-->
+        @Html.Action("TuWen")
+        <!--友情链接-->
+        @Html.Action("Links")
+    </div>
+</article>
+<script type="text/javascript">
+    $(function () {
+        $("#HomePage").addClass("topnav_current").siblings().removeClass("topnav_current");
+    })
+    var TakeMore = function (num,obj) {
+        $(obj).html("加载中...");
+        var takenum = $("#PageSize").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetMoreArticle", "Home")",
+            data: { skip: takenum, num: num },
+        success: function (data) {
+            if (data.RequestResult) {
+                $("#PageSize").val(Number(takenum) + Number(num));
+                for (var i = 0; i < data.Data.length; i++) {
+                    var html = "<div class=\"blogs\"><figure><img src=" + data.Data[i].Image + "></figure>" + "<ul><h3><a href=\"/Article/Index/" + data.Data[i].ID + "\" target=\"_blank\">" + data.Data[i].Title + "</a></h3><p>\"" + data.Data[i].Abstract + "\"</p><p class=\"autor\"><span class=\"lm f_l\"><a href=>" + data.Data[i].TypeName + "</a></span><span class=\"dtime f_l\">" + data.Data[i].AddTime + "</span><span class=\"viewnum f_r\">浏览（<a href=>" + data.Data[i].BrowseNum + "</a>）</span><span class=\"pingl f_r\">评论（<a href=>" + data.Data[i].CommentNum + "</a>）</span></p></ul></div>";
+                    $("#articllist").append(html);
+                }
+                $(".top-more p").html("加载更多");
+            }
+            else {
+                $(".top-more p").attr("onclick", "");
+                $(".top-more p").html("没有更多的文章啦");
+            }
+        },
+        });
+    }
+</script>

@@ -1,0 +1,118 @@
+﻿@model PagedList<article_comment>
+<div class="art-comment">
+    <span class="comfont">留言评论啦</span>
+    @{int i = 1;}
+    @foreach (var item in Model)
+    {
+        <div class="art-msg @("msg-color-"+i)">
+            <p>游客:</p>
+            <p class="art-msg-content">@item.content</p>
+            <div style="max-height:400px;width:85%;overflow-y:auto;margin:0 auto;">
+                @{ var replys = ServiceHelper.GetRelpyMsg(item.id);}
+                @if (replys.Count() > 0)
+                {
+                    foreach (var reply in replys)
+                    {
+                        <div class="art-msg-reply-list"><p>游客: &nbsp;@reply.content</p><p style="text-align:right">@(ServiceHelper.GetTimeDistance((DateTime)reply.add_time)) </p></div>
+                    }
+                }
+            </div>
+            <p class="art-msg-time">
+                <a href="javascript:;" id="like" onclick="ChangeLike('@item.id')">赞</a>
+                <a href="javascript:;" id="notlike" onclick="ChangeNotLike('@item.id')">踩</a>
+                <a href="javascript:;" onclick="ReplyShow('reply_@item.id')">回复</a>
+                @{int like = item.comment_like.Where(q => q.is_like == true).Count() - item.comment_like.Where(q => q.is_like != true).Count();}
+                @( like >= 0 ? like + " 赞" : Math.Abs(like) + " 踩")  &nbsp;  @item.add_time.Value.ToString("yyyy-MM-dd HH:mm:ss")
+            </p>
+            <div id="reply_@item.id" class="art-msg-reply">
+                <p>回复</p>
+                @using (Ajax.BeginForm("ReplyMsg", new AjaxOptions { OnSuccess = "RelpySuccess" }))
+                {
+                    <input name="msgid" type="hidden" value="@item.id" />
+                    <textarea name="replymsg" required></textarea>
+                    <p style="text-align:right">
+                        <button onclick="Cancel()">取消</button>
+                        <button type="submit">评论</button>
+                    </p>
+                }
+            </div>
+        </div>
+                        { i++; if (i > 5) { i = 1; } }
+                    }
+    @if (Model.Count <= 0)
+    {
+        <div class="art-msg msg-color-3">
+            <p>这么好的文章竟然没有人评论，赶快来评论留言吧</p>
+        </div>
+    }
+    <div class="pagelist">
+        @Html.PagedListPager(Model, page => Url.Action("ArtMessage", new { artid = Model.FirstOrDefault().article_id, pageindex = page, pagesize = Model.PageSize }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+    new PagedListRenderOptions
+    {
+        LinkToLastPageFormat = "尾页",
+        LinkToFirstPageFormat = "首页",
+        LinkToNextPageFormat = "下一页",
+        LinkToPreviousPageFormat = "上一页",
+        MaximumPageNumbersToDisplay = 5,
+    }, new AjaxOptions
+    {
+        HttpMethod = "Post",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "artmessage",
+        OnSuccess = "UpdatePage"
+    }))
+    </div>
+</div>
+<script type="text/javascript">
+    $(".art-msg").mouseover(function () {
+        $(this).find('a').show();
+    });
+    $(".art-msg").mouseleave(function () {
+        $(this).find('a').hide();
+    });
+    var ChangeLike = function (id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LikeMsg")',
+            data: { msgid: id, is_up: true },
+            success: function (data) {
+                if (data.RequestResult) {
+                    window.parent.goPage('@Model.PageNumber');
+                    $("#like").addClass("not-clicke");
+                    $("#notlike").removeClass("not-clicke");
+                }
+            }
+        })
+    }
+    var ChangeNotLike = function (id) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LikeMsg")',
+            data: { msgid: id, is_up: false },
+            success: function (data) {
+                if (data.RequestResult) {
+                    window.parent.goPage('@Model.PageNumber');
+                    $("#like").removeClass("not-clicke");
+                    $("#notlike").addClass("not-clicke");
+                }
+            }
+        })
+    }
+    var ReplyShow = function (obj) {
+        $(".art-msg-reply[id!='" + obj + "']").hide();
+        $("#" + obj).toggle();
+        $("#" + obj).focus();
+    }
+    var Cancel = function () {
+        $(".art-msg-reply").hide();
+    }
+    var UpdatePage = function (data) {
+        $("#pageindex").val('@Model.PageNumber');
+        $("#totalNumber").val('@Model.TotalItemCount');
+    }
+    var RelpySuccess = function (data) {
+        if (data.RequestResult) {
+            window.parent.goPage('@Model.PageNumber');
+        }
+    }
+</script>

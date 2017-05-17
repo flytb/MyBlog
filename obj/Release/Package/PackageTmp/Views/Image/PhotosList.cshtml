@@ -1,0 +1,139 @@
+﻿@model album
+<link href="~/Content/style-img.css" rel="stylesheet" />
+<script src="~/Scripts/minigrid.min.js"></script>
+<article>
+    <div class="jq22-container">
+        <div class="grid-title">
+            <div style="float:left;width:30%"> <img class="img-div" src="@Model.img" /></div>
+            <div class="grid-title-text">
+                <p style="font-size:18px;font-weight:600">@Model.title</p>
+                <p style="text-indent:25px">@Model.about</p>
+                <p style="text-align:right">@Model.add_time.Value.ToString("yyyy-MM-dd")</p>
+            </div>
+        <p>@ViewBag.AlbumName</p>
+        </div>
+        <div class="demo">
+            <div class="grid">
+            </div>
+        </div>
+    </div>
+</article>
+<script>
+    (function () {
+        $("#ImagePage").addClass("topnav_current").siblings().removeClass("topnav_current");
+        var skipnum = 0;
+        var shownum = 0;
+        var is_photo = true;
+        //瀑布流加载图片
+        function load(skip, num) {
+            $(".grid-item-no").remove();
+            $(".jq22-container").append("<div class=\"grid-item-no\"><p>加载中...</p></div>")
+            $.ajax({
+                url: '@Url.Action("GetThunmbPhotos")',
+                data: { skip: skip, num: num, album: '@ViewBag.Album' },
+                type: "POST",
+                sync: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        skipnum += num;
+                        for (var i = 0; i < data.length; i++) {
+                            create(data[i].src, data[i].alt, data[i].pid);
+                        }
+                        $(".grid-item-no").remove();
+                        var grid = new Minigrid({
+                            container: '.grid',
+                            item: '.grid-item',
+                            gutter: 18
+                        });
+                        grid.mount();
+
+                    }
+                    if (data.length == 0) {
+                        is_photo = false; $(".grid-item-no").remove();
+                        $(".jq22-container").append("<div class=\"grid-item-no\"><p>没有更多的图片啦</p></div>");
+                    }
+                },
+                error:function()
+                {
+                    $(".grid-item-no").remove();
+                    $(".jq22-container").append("<div class=\"grid-item-no\"><p>网络连接出错</p></div>")
+                }
+            })  
+        }
+        //生成一张图片
+        function create(src, alt, pid) {
+            ////生成一个div盒子对象
+            //var oDiv = document.createElement("div");
+            //oDiv.className = "grid-item";
+            ////生成一个图片对象
+            //var oImg = new Image();
+            //oImg.src = src;
+            ////把图片放入div盒子
+            //oDiv.appendChild(oImg);
+            //var oP = document.createElement("p");
+            //oP.append(alt);
+            //oDiv.appendChild(oP);
+            //oDiv.setAttribute("onclick", "TakeBigImg(" + shownum + ")");
+            ////把div放入大盒子
+            var oDiv = "<div class=\"grid-item\" onclick=\"TakeBigImg(" + shownum + ")\"><img src=\""+src+"\" ><p>"+alt+"</p></div>"
+            $(".grid").append(oDiv);
+            shownum++;
+            (function (src) {
+                setTimeout(function () {
+                    $("img[src='" + src + "']").css("opacity", "1")
+                    $("img[src='" + src + "']").css("transform", "scale(1)")
+                }, 100);
+            })(src); //立马调用
+        }
+
+        //滚动滚动条的时候调用的事件
+        var scrollH = '';//文档高度
+        var scrollT = '';//滚动条高度
+        var _height = $(window).height();
+        $(window).scroll(function () {
+            scrollH = document.body.scrollHeight;
+            scrollT = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+            if (_height + scrollT >= scrollH && is_photo) {
+                load(skipnum, 4);
+            }
+        });
+
+        load(0, 16);
+        setTimeout(function () {
+            var grid = new Minigrid({
+                container: '.grid',
+                item: '.grid-item',
+                gutter: 18
+            });
+            grid.mount();
+        }, 100);
+
+        window.addEventListener('resize', function () {
+            var grid = new Minigrid({
+                container: '.grid',
+                item: '.grid-item',
+                gutter: 18
+            });
+            grid.mount();
+        });
+    })();
+    var TakeBigImg = function (id) {
+        $.ajax({
+            url: '@Url.Action("GetPhotos")',
+            data: { num: id, album: '@ViewBag.Album' },
+            type: "POST",
+            success: function (data) {
+                layer.photos({
+                    photos: data,
+                    shadeClose: false,
+                    fixed: true,
+                    closeBtn: 1,
+                    resize: false,
+                    width: "1000px",
+                    height: "700px",
+                    anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            }
+        })
+    }
+</script>

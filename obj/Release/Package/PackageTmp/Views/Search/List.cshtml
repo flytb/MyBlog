@@ -1,0 +1,48 @@
+﻿@model IPagedList<user_article>
+@foreach (var item in Model)
+{
+    <div class="blogs">
+        <figure>
+            <img src="@item.image">
+        </figure>
+        <ul>
+            <h3><a href="@Url.Action("Index","Article",new { id=item.id})" target="_blank">@item.title</a></h3>
+            <p>@("\"" + item.@abstract + "\"")</p>
+            <p class="autor">
+                <span class="lm f_l">
+                    <a href="/">@item.article_type.type_name</a>
+                </span>
+                <span class="dtime f_l">@item.add_time.Value.ToString("yyyy-MM-dd")</span>
+                <span class="viewnum f_r">
+                    浏览（<a>@item.browse_num</a>）
+                </span>
+                <span class="pingl f_r">
+                    评论（<a>@item.article_comment.Where(q => q.is_del != true).Count()</a>）
+                </span>
+            </p>
+        </ul>
+    </div>
+}
+<div class="pagelist">
+    @Html.PagedListPager(Model, page => Url.Action("List", new {
+    PageIndex = page, PageSize = Model.PageSize, ArtType = ViewBag.ArtType, Title = ViewBag.Title,
+    KeyID=ViewBag.KeyID,Order= ViewBag.Order
+} ), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+    new PagedListRenderOptions
+    {
+        LinkToLastPageFormat = "尾页",
+        LinkToFirstPageFormat = "首页",
+        LinkToNextPageFormat = "下一页",
+        LinkToPreviousPageFormat = "上一页",
+        MaximumPageNumbersToDisplay = 6,
+    }, new AjaxOptions
+    {
+        HttpMethod = "Post",
+        InsertionMode = InsertionMode.Replace,
+        UpdateTargetId = "articllist",
+        OnSuccess = "UpdatePage"
+    }))
+</div>
+<script type="text/javascript">
+
+</script>
